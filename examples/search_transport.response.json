@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0.0",
+  "request_id": "example_search_transport",
+  "tool": "search_transport",
+  "status": "ok",
+  "data": {
+    "items": [
+      {
+        "id": "fixture_ru_trip_001",
+        "transport_type": "plane",
+        "carrier": "Демо перевозчик",
+        "segments": [
+          {
+            "origin": {
+              "name": "Аэропорт отправления",
+              "code": null
+            },
+            "destination": {
+              "name": "Аэропорт прибытия",
+              "code": null
+            },
+            "departure_at": "2026-11-10T08:00:00+03:00",
+            "arrival_at": "2026-11-10T12:00:00+03:00",
+            "number": "DEMO 001"
+          }
+        ],
+        "duration_s": 14400,
+        "total_price": null,
+        "advertised_price": {
+          "amount_minor": 1500000,
+          "currency": "RUB",
+          "basis": "one_adult"
+        },
+        "price_kind": "cached_quote",
+        "baggage": null,
+        "match_status": "requires_confirmation",
+        "checks": [
+          {
+            "field": "requested_guests_price",
+            "status": "unknown"
+          }
+        ],
+        "source_url": null
+      }
+    ]
+  },
+  "meta": {
+    "source_name": "fixture_ru_search_transport",
+    "fetched_at": "2026-10-23T12:00:00Z",
+    "source_updated_at": null,
+    "cache_hit": false,
+    "is_stale": false,
+    "is_fixture": true,
+    "returned_count": 1,
+    "has_more": false
+  },
+  "warnings": [
+    {
+      "code": "FIXTURE_DATA",
+      "message": "Вымышленные данные для проверки контракта"
+    }
+  ],
+  "error": null
+}

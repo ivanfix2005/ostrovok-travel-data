@@ -1,0 +1,338 @@
+[
+  {
+    "name": "search_hotels",
+    "description": "Найти предложения одного номера на точные даты и состав гостей. Цена в копейках за всю группу и срок.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "location": {
+          "type": "object",
+          "properties": {
+            "city": {
+              "type": "string",
+              "maxLength": 120,
+              "minLength": 1
+            },
+            "country_code": {
+              "type": "string",
+              "maxLength": 2,
+              "pattern": "^[A-Z]{2}$"
+            }
+          },
+          "required": [
+            "city",
+            "country_code"
+          ],
+          "additionalProperties": false
+        },
+        "check_in": {
+          "type": "string",
+          "maxLength": 10,
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "check_out": {
+          "type": "string",
+          "maxLength": 10,
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "guests": {
+          "type": "object",
+          "properties": {
+            "adults": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9
+            },
+            "children_ages": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 17
+              },
+              "minItems": 0,
+              "maxItems": 6
+            }
+          },
+          "required": [
+            "adults",
+            "children_ages"
+          ],
+          "additionalProperties": false
+        },
+        "max_total_price_minor": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "meal": {
+          "enum": [
+            "RO",
+            "BB",
+            "HB",
+            "FB",
+            "AI",
+            null
+          ]
+        },
+        "pets_required": {
+          "type": "boolean"
+        },
+        "free_cancellation_required": {
+          "type": "boolean"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        }
+      },
+      "required": [
+        "location",
+        "check_in",
+        "check_out",
+        "guests",
+        "max_total_price_minor",
+        "meal",
+        "pets_required",
+        "free_cancellation_required",
+        "limit"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "search_transport",
+    "description": "Найти транспорт в одну сторону. Обратный путь вызывается отдельно. Цена на группу может быть неизвестна.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "origin": {
+          "type": "object",
+          "properties": {
+            "city": {
+              "type": "string",
+              "maxLength": 120,
+              "minLength": 1
+            },
+            "country_code": {
+              "type": "string",
+              "maxLength": 2,
+              "pattern": "^[A-Z]{2}$"
+            }
+          },
+          "required": [
+            "city",
+            "country_code"
+          ],
+          "additionalProperties": false
+        },
+        "destination": {
+          "type": "object",
+          "properties": {
+            "city": {
+              "type": "string",
+              "maxLength": 120,
+              "minLength": 1
+            },
+            "country_code": {
+              "type": "string",
+              "maxLength": 2,
+              "pattern": "^[A-Z]{2}$"
+            }
+          },
+          "required": [
+            "city",
+            "country_code"
+          ],
+          "additionalProperties": false
+        },
+        "departure_date": {
+          "type": "string",
+          "maxLength": 10,
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "transport_type": {
+          "enum": [
+            "plane",
+            "train",
+            "bus"
+          ]
+        },
+        "guests": {
+          "type": "object",
+          "properties": {
+            "adults": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9
+            },
+            "children_ages": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 17
+              },
+              "minItems": 0,
+              "maxItems": 6
+            }
+          },
+          "required": [
+            "adults",
+            "children_ages"
+          ],
+          "additionalProperties": false
+        },
+        "direct_only": {
+          "type": "boolean"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        }
+      },
+      "required": [
+        "origin",
+        "destination",
+        "departure_date",
+        "transport_type",
+        "guests",
+        "direct_only",
+        "limit"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "get_weather",
+    "description": "Получить доступный прогноз по координатам. Начало включено, конец исключён, максимум 16 дней.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "location": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            "lon": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            }
+          },
+          "required": [
+            "lat",
+            "lon"
+          ],
+          "additionalProperties": false
+        },
+        "start_date": {
+          "type": "string",
+          "maxLength": 10,
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "end_date": {
+          "type": "string",
+          "maxLength": 10,
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        }
+      },
+      "required": [
+        "location",
+        "start_date",
+        "end_date"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "get_route",
+    "description": "Получить дорожное расстояние в метрах и время на автомобиле в секундах. Не рассчитывает цену трансфера.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "origin": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            "lon": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            }
+          },
+          "required": [
+            "lat",
+            "lon"
+          ],
+          "additionalProperties": false
+        },
+        "destination": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            "lon": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            }
+          },
+          "required": [
+            "lat",
+            "lon"
+          ],
+          "additionalProperties": false
+        },
+        "departure_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 40,
+              "format": "date-time",
+              "pattern": "(Z|[+-]\\d{2}:\\d{2})$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mode": {
+          "enum": [
+            "car"
+          ]
+        }
+      },
+      "required": [
+        "origin",
+        "destination",
+        "departure_at",
+        "mode"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

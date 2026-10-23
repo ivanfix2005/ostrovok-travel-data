@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "request_id": "example_get_weather",
+  "tool": "get_weather",
+  "status": "ok",
+  "data": {
+    "items": [
+      {
+        "date": "2026-10-25",
+        "kind": "forecast",
+        "day_temp_min_c": 16,
+        "day_temp_max_c": 19,
+        "night_temp_min_c": 11,
+        "night_temp_max_c": 13,
+        "water_temp_c": null,
+        "precipitation_probability": 0.3,
+        "source_url": null
+      },
+      {
+        "date": "2026-10-26",
+        "kind": "forecast",
+        "day_temp_min_c": 16,
+        "day_temp_max_c": 19,
+        "night_temp_min_c": 11,
+        "night_temp_max_c": 13,
+        "water_temp_c": null,
+        "precipitation_probability": 0.3,
+        "source_url": null
+      }
+    ]
+  },
+  "meta": {
+    "source_name": "fixture_ru_get_weather",
+    "fetched_at": "2026-10-23T12:00:00Z",
+    "source_updated_at": null,
+    "cache_hit": false,
+    "is_stale": false,
+    "is_fixture": true,
+    "returned_count": 2,
+    "has_more": false
+  },
+  "warnings": [
+    {
+      "code": "FIXTURE_DATA",
+      "message": "Вымышленные данные для проверки контракта"
+    }
+  ],
+  "error": null
+}

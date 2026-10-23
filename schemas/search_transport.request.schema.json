@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ostrovok-hackathon:travel-data:1.0.0:search_transport.request",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "request_id": {
+      "type": "string",
+      "maxLength": 120,
+      "minLength": 1
+    },
+    "tool": {
+      "const": "search_transport"
+    },
+    "arguments": {
+      "type": "object",
+      "properties": {
+        "origin": {
+          "type": "object",
+          "properties": {
+            "city": {
+              "type": "string",
+              "maxLength": 120,
+              "minLength": 1
+            },
+            "country_code": {
+              "type": "string",
+              "maxLength": 2,
+              "pattern": "^[A-Z]{2}$"
+            }
+          },
+          "required": [
+            "city",
+            "country_code"
+          ],
+          "additionalProperties": false
+        },
+        "destination": {
+          "type": "object",
+          "properties": {
+            "city": {
+              "type": "string",
+              "maxLength": 120,
+              "minLength": 1
+            },
+            "country_code": {
+              "type": "string",
+              "maxLength": 2,
+              "pattern": "^[A-Z]{2}$"
+            }
+          },
+          "required": [
+            "city",
+            "country_code"
+          ],
+          "additionalProperties": false
+        },
+        "departure_date": {
+          "type": "string",
+          "maxLength": 10,
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "transport_type": {
+          "enum": [
+            "plane",
+            "train",
+            "bus"
+          ]
+        },
+        "guests": {
+          "type": "object",
+          "properties": {
+            "adults": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9
+            },
+            "children_ages": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 17
+              },
+              "minItems": 0,
+              "maxItems": 6
+            }
+          },
+          "required": [
+            "adults",
+            "children_ages"
+          ],
+          "additionalProperties": false
+        },
+        "direct_only": {
+          "type": "boolean"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        }
+      },
+      "required": [
+        "origin",
+        "destination",
+        "departure_date",
+        "transport_type",
+        "guests",
+        "direct_only",
+        "limit"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "request_id",
+    "tool",
+    "arguments"
+  ],
+  "additionalProperties": false
+}

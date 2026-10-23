@@ -1,0 +1,1462 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ostrovok-hackathon:travel-data:1.0.0:search_transport.response",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "request_id": {
+      "type": "string",
+      "maxLength": 120,
+      "minLength": 1
+    },
+    "tool": {
+      "const": "search_transport"
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "empty",
+        "partial",
+        "error"
+      ]
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 160,
+                "minLength": 1
+              },
+              "transport_type": {
+                "enum": [
+                  "plane",
+                  "train",
+                  "bus"
+                ]
+              },
+              "carrier": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 300
+              },
+              "segments": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "origin": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "maxLength": 300
+                        },
+                        "code": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "maxLength": 80
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "code"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "destination": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "maxLength": 300
+                        },
+                        "code": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "maxLength": 80
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "code"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "departure_at": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "maxLength": 40,
+                          "format": "date-time",
+                          "pattern": "(Z|[+-]\\d{2}:\\d{2})$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "arrival_at": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "maxLength": 40,
+                          "format": "date-time",
+                          "pattern": "(Z|[+-]\\d{2}:\\d{2})$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "number": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 80
+                    }
+                  },
+                  "required": [
+                    "origin",
+                    "destination",
+                    "departure_at",
+                    "arrival_at",
+                    "number"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1,
+                "maxItems": 12
+              },
+              "duration_s": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "total_price": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "amount_minor": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "currency": {
+                        "enum": [
+                          "RUB"
+                        ]
+                      },
+                      "basis": {
+                        "enum": [
+                          "requested_guests_total"
+                        ]
+                      },
+                      "includes_mandatory_fees": {
+                        "type": [
+                          "boolean",
+                          "null"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "amount_minor",
+                      "currency",
+                      "basis",
+                      "includes_mandatory_fees"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "advertised_price": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "amount_minor": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "currency": {
+                        "enum": [
+                          "RUB"
+                        ]
+                      },
+                      "basis": {
+                        "enum": [
+                          "one_adult",
+                          "unknown"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "amount_minor",
+                      "currency",
+                      "basis"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "price_kind": {
+                "enum": [
+                  "live_quote",
+                  "cached_quote",
+                  "schedule_only",
+                  "unknown"
+                ]
+              },
+              "baggage": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 500
+              },
+              "match_status": {
+                "enum": [
+                  "matches",
+                  "requires_confirmation"
+                ]
+              },
+              "checks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "field": {
+                      "enum": [
+                        "max_total_price_minor",
+                        "meal",
+                        "pets_required",
+                        "free_cancellation_required",
+                        "requested_guests_price",
+                        "mandatory_fees"
+                      ]
+                    },
+                    "status": {
+                      "enum": [
+                        "passed",
+                        "failed",
+                        "unknown"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "field",
+                    "status"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 0,
+                "maxItems": 6
+              },
+              "source_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 1500,
+                "format": "uri",
+                "pattern": "^https?://"
+              }
+            },
+            "required": [
+              "id",
+              "transport_type",
+              "carrier",
+              "segments",
+              "duration_s",
+              "total_price",
+              "advertised_price",
+              "price_kind",
+              "baggage",
+              "match_status",
+              "checks",
+              "source_url"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0,
+          "maxItems": 5
+        }
+      },
+      "required": [
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "source_name": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "fetched_at": {
+          "type": "string",
+          "maxLength": 40,
+          "format": "date-time",
+          "pattern": "(Z|[+-]\\d{2}:\\d{2})$"
+        },
+        "source_updated_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 40,
+              "format": "date-time",
+              "pattern": "(Z|[+-]\\d{2}:\\d{2})$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cache_hit": {
+          "type": "boolean"
+        },
+        "is_stale": {
+          "type": "boolean"
+        },
+        "is_fixture": {
+          "type": "boolean"
+        },
+        "returned_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16
+        },
+        "has_more": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source_name",
+        "fetched_at",
+        "source_updated_at",
+        "cache_hit",
+        "is_stale",
+        "is_fixture",
+        "returned_count",
+        "has_more"
+      ],
+      "additionalProperties": false
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 1
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "maxItems": 24
+    },
+    "error": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "enum": [
+                "INVALID_ARGUMENT",
+                "AMBIGUOUS_LOCATION",
+                "UNSUPPORTED_REQUEST",
+                "ACCESS_NOT_CONFIGURED",
+                "SOURCE_AUTH_FAILED",
+                "SOURCE_RATE_LIMITED",
+                "SOURCE_TIMEOUT",
+                "SOURCE_UNAVAILABLE",
+                "SOURCE_SCHEMA_CHANGED",
+                "OUT_OF_COVERAGE"
+              ]
+            },
+            "message": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "retryable": {
+              "type": "boolean"
+            },
+            "field": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 120
+            }
+          },
+          "required": [
+            "code",
+            "message",
+            "retryable",
+            "field"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "request_id",
+    "tool",
+    "status",
+    "data",
+    "meta",
+    "warnings",
+    "error"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "error"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "enum": [
+                  "INVALID_ARGUMENT",
+                  "AMBIGUOUS_LOCATION",
+                  "UNSUPPORTED_REQUEST",
+                  "ACCESS_NOT_CONFIGURED",
+                  "SOURCE_AUTH_FAILED",
+                  "SOURCE_RATE_LIMITED",
+                  "SOURCE_TIMEOUT",
+                  "SOURCE_UNAVAILABLE",
+                  "SOURCE_SCHEMA_CHANGED",
+                  "OUT_OF_COVERAGE"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "maxLength": 500
+              },
+              "retryable": {
+                "type": "boolean"
+              },
+              "field": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 120
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "retryable",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "maxLength": 160,
+                      "minLength": 1
+                    },
+                    "transport_type": {
+                      "enum": [
+                        "plane",
+                        "train",
+                        "bus"
+                      ]
+                    },
+                    "carrier": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 300
+                    },
+                    "segments": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "origin": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "maxLength": 300
+                              },
+                              "code": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "maxLength": 80
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "code"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "destination": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "maxLength": 300
+                              },
+                              "code": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "maxLength": 80
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "code"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "departure_at": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "maxLength": 40,
+                                "format": "date-time",
+                                "pattern": "(Z|[+-]\\d{2}:\\d{2})$"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "arrival_at": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "maxLength": 40,
+                                "format": "date-time",
+                                "pattern": "(Z|[+-]\\d{2}:\\d{2})$"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "number": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "maxLength": 80
+                          }
+                        },
+                        "required": [
+                          "origin",
+                          "destination",
+                          "departure_at",
+                          "arrival_at",
+                          "number"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "minItems": 1,
+                      "maxItems": 12
+                    },
+                    "duration_s": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "total_price": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "amount_minor": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "currency": {
+                              "enum": [
+                                "RUB"
+                              ]
+                            },
+                            "basis": {
+                              "enum": [
+                                "requested_guests_total"
+                              ]
+                            },
+                            "includes_mandatory_fees": {
+                              "type": [
+                                "boolean",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "amount_minor",
+                            "currency",
+                            "basis",
+                            "includes_mandatory_fees"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "advertised_price": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "amount_minor": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "currency": {
+                              "enum": [
+                                "RUB"
+                              ]
+                            },
+                            "basis": {
+                              "enum": [
+                                "one_adult",
+                                "unknown"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "amount_minor",
+                            "currency",
+                            "basis"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "price_kind": {
+                      "enum": [
+                        "live_quote",
+                        "cached_quote",
+                        "schedule_only",
+                        "unknown"
+                      ]
+                    },
+                    "baggage": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 500
+                    },
+                    "match_status": {
+                      "enum": [
+                        "matches",
+                        "requires_confirmation"
+                      ]
+                    },
+                    "checks": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "field": {
+                            "enum": [
+                              "max_total_price_minor",
+                              "meal",
+                              "pets_required",
+                              "free_cancellation_required",
+                              "requested_guests_price",
+                              "mandatory_fees"
+                            ]
+                          },
+                          "status": {
+                            "enum": [
+                              "passed",
+                              "failed",
+                              "unknown"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "field",
+                          "status"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "minItems": 0,
+                      "maxItems": 6
+                    },
+                    "source_url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 1500,
+                      "format": "uri",
+                      "pattern": "^https?://"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "transport_type",
+                    "carrier",
+                    "segments",
+                    "duration_s",
+                    "total_price",
+                    "advertised_price",
+                    "price_kind",
+                    "baggage",
+                    "match_status",
+                    "checks",
+                    "source_url"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 0,
+                "maxItems": 0
+              }
+            },
+            "required": [
+              "items"
+            ],
+            "additionalProperties": false
+          },
+          "meta": {
+            "properties": {
+              "returned_count": {
+                "const": 0
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "error": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "empty"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "maxLength": 160,
+                      "minLength": 1
+                    },
+                    "transport_type": {
+                      "enum": [
+                        "plane",
+                        "train",
+                        "bus"
+                      ]
+                    },
+                    "carrier": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 300
+                    },
+                    "segments": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "origin": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "maxLength": 300
+                              },
+                              "code": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "maxLength": 80
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "code"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "destination": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "maxLength": 300
+                              },
+                              "code": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "maxLength": 80
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "code"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "departure_at": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "maxLength": 40,
+                                "format": "date-time",
+                                "pattern": "(Z|[+-]\\d{2}:\\d{2})$"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "arrival_at": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "maxLength": 40,
+                                "format": "date-time",
+                                "pattern": "(Z|[+-]\\d{2}:\\d{2})$"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "number": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "maxLength": 80
+                          }
+                        },
+                        "required": [
+                          "origin",
+                          "destination",
+                          "departure_at",
+                          "arrival_at",
+                          "number"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "minItems": 1,
+                      "maxItems": 12
+                    },
+                    "duration_s": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "total_price": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "amount_minor": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "currency": {
+                              "enum": [
+                                "RUB"
+                              ]
+                            },
+                            "basis": {
+                              "enum": [
+                                "requested_guests_total"
+                              ]
+                            },
+                            "includes_mandatory_fees": {
+                              "type": [
+                                "boolean",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "amount_minor",
+                            "currency",
+                            "basis",
+                            "includes_mandatory_fees"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "advertised_price": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "amount_minor": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "currency": {
+                              "enum": [
+                                "RUB"
+                              ]
+                            },
+                            "basis": {
+                              "enum": [
+                                "one_adult",
+                                "unknown"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "amount_minor",
+                            "currency",
+                            "basis"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "price_kind": {
+                      "enum": [
+                        "live_quote",
+                        "cached_quote",
+                        "schedule_only",
+                        "unknown"
+                      ]
+                    },
+                    "baggage": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 500
+                    },
+                    "match_status": {
+                      "enum": [
+                        "matches",
+                        "requires_confirmation"
+                      ]
+                    },
+                    "checks": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "field": {
+                            "enum": [
+                              "max_total_price_minor",
+                              "meal",
+                              "pets_required",
+                              "free_cancellation_required",
+                              "requested_guests_price",
+                              "mandatory_fees"
+                            ]
+                          },
+                          "status": {
+                            "enum": [
+                              "passed",
+                              "failed",
+                              "unknown"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "field",
+                          "status"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "minItems": 0,
+                      "maxItems": 6
+                    },
+                    "source_url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 1500,
+                      "format": "uri",
+                      "pattern": "^https?://"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "transport_type",
+                    "carrier",
+                    "segments",
+                    "duration_s",
+                    "total_price",
+                    "advertised_price",
+                    "price_kind",
+                    "baggage",
+                    "match_status",
+                    "checks",
+                    "source_url"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 0,
+                "maxItems": 0
+              }
+            },
+            "required": [
+              "items"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "ok"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "maxLength": 160,
+                      "minLength": 1
+                    },
+                    "transport_type": {
+                      "enum": [
+                        "plane",
+                        "train",
+                        "bus"
+                      ]
+                    },
+                    "carrier": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 300
+                    },
+                    "segments": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "origin": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "maxLength": 300
+                              },
+                              "code": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "maxLength": 80
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "code"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "destination": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "maxLength": 300
+                              },
+                              "code": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "maxLength": 80
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "code"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "departure_at": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "maxLength": 40,
+                                "format": "date-time",
+                                "pattern": "(Z|[+-]\\d{2}:\\d{2})$"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "arrival_at": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "maxLength": 40,
+                                "format": "date-time",
+                                "pattern": "(Z|[+-]\\d{2}:\\d{2})$"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "number": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "maxLength": 80
+                          }
+                        },
+                        "required": [
+                          "origin",
+                          "destination",
+                          "departure_at",
+                          "arrival_at",
+                          "number"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "minItems": 1,
+                      "maxItems": 12
+                    },
+                    "duration_s": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "total_price": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "amount_minor": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "currency": {
+                              "enum": [
+                                "RUB"
+                              ]
+                            },
+                            "basis": {
+                              "enum": [
+                                "requested_guests_total"
+                              ]
+                            },
+                            "includes_mandatory_fees": {
+                              "type": [
+                                "boolean",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "amount_minor",
+                            "currency",
+                            "basis",
+                            "includes_mandatory_fees"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "advertised_price": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "amount_minor": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "currency": {
+                              "enum": [
+                                "RUB"
+                              ]
+                            },
+                            "basis": {
+                              "enum": [
+                                "one_adult",
+                                "unknown"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "amount_minor",
+                            "currency",
+                            "basis"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "price_kind": {
+                      "enum": [
+                        "live_quote",
+                        "cached_quote",
+                        "schedule_only",
+                        "unknown"
+                      ]
+                    },
+                    "baggage": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 500
+                    },
+                    "match_status": {
+                      "enum": [
+                        "matches",
+                        "requires_confirmation"
+                      ]
+                    },
+                    "checks": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "field": {
+                            "enum": [
+                              "max_total_price_minor",
+                              "meal",
+                              "pets_required",
+                              "free_cancellation_required",
+                              "requested_guests_price",
+                              "mandatory_fees"
+                            ]
+                          },
+                          "status": {
+                            "enum": [
+                              "passed",
+                              "failed",
+                              "unknown"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "field",
+                          "status"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "minItems": 0,
+                      "maxItems": 6
+                    },
+                    "source_url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 1500,
+                      "format": "uri",
+                      "pattern": "^https?://"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "transport_type",
+                    "carrier",
+                    "segments",
+                    "duration_s",
+                    "total_price",
+                    "advertised_price",
+                    "price_kind",
+                    "baggage",
+                    "match_status",
+                    "checks",
+                    "source_url"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1,
+                "maxItems": 5
+              }
+            },
+            "required": [
+              "items"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "partial"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "maxLength": 80,
+                  "minLength": 1
+                },
+                "message": {
+                  "type": "string",
+                  "maxLength": 500,
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "maxItems": 24
+          }
+        }
+      }
+    }
+  ]
+}

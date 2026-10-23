@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "request_id": "example_invalid",
+  "tool": "search_hotels",
+  "status": "error",
+  "data": {
+    "items": []
+  },
+  "meta": {
+    "source_name": "fixture_ru_search_hotels",
+    "fetched_at": "2026-10-23T12:00:00Z",
+    "source_updated_at": null,
+    "cache_hit": false,
+    "is_stale": false,
+    "is_fixture": true,
+    "returned_count": 0,
+    "has_more": false
+  },
+  "warnings": [
+    {
+      "code": "FIXTURE_DATA",
+      "message": "Вымышленные данные для проверки контракта"
+    }
+  ],
+  "error": {
+    "code": "INVALID_ARGUMENT",
+    "message": "Параметры не соответствуют JSON Schema",
+    "retryable": false,
+    "field": "arguments.limit"
+  }
+}

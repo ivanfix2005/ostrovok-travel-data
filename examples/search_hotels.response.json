@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0.0",
+  "request_id": "example_search_hotels",
+  "tool": "search_hotels",
+  "status": "ok",
+  "data": {
+    "items": [
+      {
+        "id": "fixture_ru_hotel_001",
+        "hotel_name": "Демо отель",
+        "offer_id": "fixture_offer_001",
+        "room_name": "Семейный номер",
+        "address": "Демонстрационный адрес",
+        "coordinates": {
+          "lat": 43.5855,
+          "lon": 39.7231
+        },
+        "check_in": "2026-11-10",
+        "check_out": "2026-11-17",
+        "guests": {
+          "adults": 2,
+          "children_ages": [
+            7
+          ]
+        },
+        "meal": "BB",
+        "total_price": {
+          "amount_minor": 7000000,
+          "currency": "RUB",
+          "basis": "requested_guests_total",
+          "includes_mandatory_fees": true
+        },
+        "cancellation": {
+          "free_until": "2026-11-08T15:00:00+03:00",
+          "summary": "Бесплатная отмена до указанного срока"
+        },
+        "pets_allowed": null,
+        "match_status": "requires_confirmation",
+        "checks": [
+          {
+            "field": "requested_guests_price",
+            "status": "passed"
+          },
+          {
+            "field": "mandatory_fees",
+            "status": "passed"
+          },
+          {
+            "field": "max_total_price_minor",
+            "status": "passed"
+          },
+          {
+            "field": "meal",
+            "status": "passed"
+          },
+          {
+            "field": "pets_required",
+            "status": "unknown"
+          },
+          {
+            "field": "free_cancellation_required",
+            "status": "passed"
+          }
+        ],
+        "source_url": null
+      }
+    ]
+  },
+  "meta": {
+    "source_name": "fixture_ru_search_hotels",
+    "fetched_at": "2026-10-23T12:00:00Z",
+    "source_updated_at": null,
+    "cache_hit": false,
+    "is_stale": false,
+    "is_fixture": true,
+    "returned_count": 1,
+    "has_more": false
+  },
+  "warnings": [
+    {
+      "code": "FIXTURE_DATA",
+      "message": "Вымышленные данные для проверки контракта"
+    },
+    {
+      "code": "CONDITIONS_UNCONFIRMED",
+      "message": "Часть условий предложения требует подтверждения"
+    }
+  ],
+  "error": null
+}

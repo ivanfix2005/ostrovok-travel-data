@@ -1,0 +1,750 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ostrovok-hackathon:travel-data:1.0.0:get_weather.response",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "request_id": {
+      "type": "string",
+      "maxLength": 120,
+      "minLength": 1
+    },
+    "tool": {
+      "const": "get_weather"
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "empty",
+        "partial",
+        "error"
+      ]
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "date": {
+                "type": "string",
+                "maxLength": 10,
+                "format": "date",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              "kind": {
+                "enum": [
+                  "forecast"
+                ]
+              },
+              "day_temp_min_c": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "day_temp_max_c": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "night_temp_min_c": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "night_temp_max_c": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "water_temp_c": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "precipitation_probability": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "source_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 1500,
+                "format": "uri",
+                "pattern": "^https?://"
+              }
+            },
+            "required": [
+              "date",
+              "kind",
+              "day_temp_min_c",
+              "day_temp_max_c",
+              "night_temp_min_c",
+              "night_temp_max_c",
+              "water_temp_c",
+              "precipitation_probability",
+              "source_url"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0,
+          "maxItems": 16
+        }
+      },
+      "required": [
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "source_name": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "fetched_at": {
+          "type": "string",
+          "maxLength": 40,
+          "format": "date-time",
+          "pattern": "(Z|[+-]\\d{2}:\\d{2})$"
+        },
+        "source_updated_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 40,
+              "format": "date-time",
+              "pattern": "(Z|[+-]\\d{2}:\\d{2})$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cache_hit": {
+          "type": "boolean"
+        },
+        "is_stale": {
+          "type": "boolean"
+        },
+        "is_fixture": {
+          "type": "boolean"
+        },
+        "returned_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16
+        },
+        "has_more": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source_name",
+        "fetched_at",
+        "source_updated_at",
+        "cache_hit",
+        "is_stale",
+        "is_fixture",
+        "returned_count",
+        "has_more"
+      ],
+      "additionalProperties": false
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 1
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "maxItems": 24
+    },
+    "error": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "enum": [
+                "INVALID_ARGUMENT",
+                "AMBIGUOUS_LOCATION",
+                "UNSUPPORTED_REQUEST",
+                "ACCESS_NOT_CONFIGURED",
+                "SOURCE_AUTH_FAILED",
+                "SOURCE_RATE_LIMITED",
+                "SOURCE_TIMEOUT",
+                "SOURCE_UNAVAILABLE",
+                "SOURCE_SCHEMA_CHANGED",
+                "OUT_OF_COVERAGE"
+              ]
+            },
+            "message": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "retryable": {
+              "type": "boolean"
+            },
+            "field": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 120
+            }
+          },
+          "required": [
+            "code",
+            "message",
+            "retryable",
+            "field"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "request_id",
+    "tool",
+    "status",
+    "data",
+    "meta",
+    "warnings",
+    "error"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "error"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "enum": [
+                  "INVALID_ARGUMENT",
+                  "AMBIGUOUS_LOCATION",
+                  "UNSUPPORTED_REQUEST",
+                  "ACCESS_NOT_CONFIGURED",
+                  "SOURCE_AUTH_FAILED",
+                  "SOURCE_RATE_LIMITED",
+                  "SOURCE_TIMEOUT",
+                  "SOURCE_UNAVAILABLE",
+                  "SOURCE_SCHEMA_CHANGED",
+                  "OUT_OF_COVERAGE"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "maxLength": 500
+              },
+              "retryable": {
+                "type": "boolean"
+              },
+              "field": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 120
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "retryable",
+              "field"
+            ],
+            "additionalProperties": false
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "date": {
+                      "type": "string",
+                      "maxLength": 10,
+                      "format": "date",
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                    },
+                    "kind": {
+                      "enum": [
+                        "forecast"
+                      ]
+                    },
+                    "day_temp_min_c": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "day_temp_max_c": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "night_temp_min_c": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "night_temp_max_c": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "water_temp_c": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "precipitation_probability": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "source_url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 1500,
+                      "format": "uri",
+                      "pattern": "^https?://"
+                    }
+                  },
+                  "required": [
+                    "date",
+                    "kind",
+                    "day_temp_min_c",
+                    "day_temp_max_c",
+                    "night_temp_min_c",
+                    "night_temp_max_c",
+                    "water_temp_c",
+                    "precipitation_probability",
+                    "source_url"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 0,
+                "maxItems": 0
+              }
+            },
+            "required": [
+              "items"
+            ],
+            "additionalProperties": false
+          },
+          "meta": {
+            "properties": {
+              "returned_count": {
+                "const": 0
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "error": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "empty"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "date": {
+                      "type": "string",
+                      "maxLength": 10,
+                      "format": "date",
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                    },
+                    "kind": {
+                      "enum": [
+                        "forecast"
+                      ]
+                    },
+                    "day_temp_min_c": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "day_temp_max_c": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "night_temp_min_c": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "night_temp_max_c": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "water_temp_c": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "precipitation_probability": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "source_url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 1500,
+                      "format": "uri",
+                      "pattern": "^https?://"
+                    }
+                  },
+                  "required": [
+                    "date",
+                    "kind",
+                    "day_temp_min_c",
+                    "day_temp_max_c",
+                    "night_temp_min_c",
+                    "night_temp_max_c",
+                    "water_temp_c",
+                    "precipitation_probability",
+                    "source_url"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 0,
+                "maxItems": 0
+              }
+            },
+            "required": [
+              "items"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "ok"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "date": {
+                      "type": "string",
+                      "maxLength": 10,
+                      "format": "date",
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                    },
+                    "kind": {
+                      "enum": [
+                        "forecast"
+                      ]
+                    },
+                    "day_temp_min_c": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "day_temp_max_c": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "night_temp_min_c": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "night_temp_max_c": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "water_temp_c": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "precipitation_probability": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "source_url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 1500,
+                      "format": "uri",
+                      "pattern": "^https?://"
+                    }
+                  },
+                  "required": [
+                    "date",
+                    "kind",
+                    "day_temp_min_c",
+                    "day_temp_max_c",
+                    "night_temp_min_c",
+                    "night_temp_max_c",
+                    "water_temp_c",
+                    "precipitation_probability",
+                    "source_url"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1,
+                "maxItems": 16
+              }
+            },
+            "required": [
+              "items"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "partial"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "maxLength": 80,
+                  "minLength": 1
+                },
+                "message": {
+                  "type": "string",
+                  "maxLength": 500,
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "maxItems": 24
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "request_id": "example_get_route",
+  "tool": "get_route",
+  "status": "ok",
+  "data": {
+    "items": [
+      {
+        "id": "fixture_ru_route_001",
+        "origin": {
+          "lat": 43.4499,
+          "lon": 39.9566
+        },
+        "destination": {
+          "lat": 43.5855,
+          "lon": 39.7231
+        },
+        "distance_m": 31000,
+        "duration_s": 2700,
+        "traffic_mode": "unknown",
+        "departure_at": null,
+        "source_url": null
+      }
+    ]
+  },
+  "meta": {
+    "source_name": "fixture_ru_get_route",
+    "fetched_at": "2026-10-23T12:00:00Z",
+    "source_updated_at": null,
+    "cache_hit": false,
+    "is_stale": false,
+    "is_fixture": true,
+    "returned_count": 1,
+    "has_more": false
+  },
+  "warnings": [
+    {
+      "code": "FIXTURE_DATA",
+      "message": "Вымышленные данные для проверки контракта"
+    }
+  ],
+  "error": null
+}

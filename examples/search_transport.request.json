@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "request_id": "example_search_transport",
+  "tool": "search_transport",
+  "arguments": {
+    "origin": {
+      "city": "Москва",
+      "country_code": "RU"
+    },
+    "destination": {
+      "city": "Сочи",
+      "country_code": "RU"
+    },
+    "departure_date": "2026-11-10",
+    "transport_type": "plane",
+    "guests": {
+      "adults": 2,
+      "children_ages": [
+        7
+      ]
+    },
+    "direct_only": true,
+    "limit": 3
+  }
+}

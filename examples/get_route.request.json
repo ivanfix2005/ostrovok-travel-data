@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "request_id": "example_get_route",
+  "tool": "get_route",
+  "arguments": {
+    "origin": {
+      "lat": 43.4499,
+      "lon": 39.9566
+    },
+    "destination": {
+      "lat": 43.5855,
+      "lon": 39.7231
+    },
+    "departure_at": null,
+    "mode": "car"
+  }
+}

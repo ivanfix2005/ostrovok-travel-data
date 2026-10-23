@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ostrovok-hackathon:travel-data:1.0.0:search_hotels.request",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "request_id": {
+      "type": "string",
+      "maxLength": 120,
+      "minLength": 1
+    },
+    "tool": {
+      "const": "search_hotels"
+    },
+    "arguments": {
+      "type": "object",
+      "properties": {
+        "location": {
+          "type": "object",
+          "properties": {
+            "city": {
+              "type": "string",
+              "maxLength": 120,
+              "minLength": 1
+            },
+            "country_code": {
+              "type": "string",
+              "maxLength": 2,
+              "pattern": "^[A-Z]{2}$"
+            }
+          },
+          "required": [
+            "city",
+            "country_code"
+          ],
+          "additionalProperties": false
+        },
+        "check_in": {
+          "type": "string",
+          "maxLength": 10,
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "check_out": {
+          "type": "string",
+          "maxLength": 10,
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "guests": {
+          "type": "object",
+          "properties": {
+            "adults": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9
+            },
+            "children_ages": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 17
+              },
+              "minItems": 0,
+              "maxItems": 6
+            }
+          },
+          "required": [
+            "adults",
+            "children_ages"
+          ],
+          "additionalProperties": false
+        },
+        "max_total_price_minor": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "meal": {
+          "enum": [
+            "RO",
+            "BB",
+            "HB",
+            "FB",
+            "AI",
+            null
+          ]
+        },
+        "pets_required": {
+          "type": "boolean"
+        },
+        "free_cancellation_required": {
+          "type": "boolean"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        }
+      },
+      "required": [
+        "location",
+        "check_in",
+        "check_out",
+        "guests",
+        "max_total_price_minor",
+        "meal",
+        "pets_required",
+        "free_cancellation_required",
+        "limit"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "request_id",
+    "tool",
+    "arguments"
+  ],
+  "additionalProperties": false
+}

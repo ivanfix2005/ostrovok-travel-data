@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "request_id": "example_search_hotels",
+  "tool": "search_hotels",
+  "arguments": {
+    "location": {
+      "city": "Сочи",
+      "country_code": "RU"
+    },
+    "check_in": "2026-11-10",
+    "check_out": "2026-11-17",
+    "guests": {
+      "adults": 2,
+      "children_ages": [
+        7
+      ]
+    },
+    "max_total_price_minor": 8000000,
+    "meal": "BB",
+    "pets_required": true,
+    "free_cancellation_required": true,
+    "limit": 3
+  }
+}

@@ -1,0 +1,13 @@
+include README.md README.txt tools.json requirements-lock.txt .env.example
+include START.cmd INSTALL.cmd OPEN_CODE.cmd
+recursive-include schemas *.json
+recursive-include examples *.json
+recursive-include docs *.md
+recursive-include scripts *.py *.ps1
+recursive-include tests *.py
+exclude .env
+prune .venv
+prune data
+prune reports
+prune dist
+prune build

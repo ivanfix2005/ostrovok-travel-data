@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "request_id": "example_get_weather",
+  "tool": "get_weather",
+  "arguments": {
+    "location": {
+      "lat": 43.5855,
+      "lon": 39.7231
+    },
+    "start_date": "2026-10-25",
+    "end_date": "2026-10-27"
+  }
+}
