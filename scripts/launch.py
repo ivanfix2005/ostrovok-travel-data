@@ -27,6 +27,9 @@ def main():
         print("2. Проверить настройку источников")
         print("3. Открыть файл ключей .env")
         print("4. Запустить тесты")
+        print("5. Ввести свои API-ключи (скрытый ввод)")
+        print("6. Загрузить настоящий справочник городов Яндекса")
+        print("7. Проверить реальные запросы четырёх функций")
         print("0. Выход")
         try:
             choice = input("\nВыбери номер: ").strip()
@@ -45,8 +48,14 @@ def main():
             subprocess.Popen(["notepad.exe", str(target)])
         elif choice == "4":
             run("-m", "pytest", "-q")
+        elif choice == "5":
+            run("-m", "travel_data", "configure")
+        elif choice == "6":
+            run("-m", "travel_data", "import-stations")
+        elif choice == "7":
+            run("-m", "travel_data", "live-check", "--output", "reports/live-check.json")
         else:
-            print("Введи 1, 2, 3, 4 или 0.")
+            print("Введи номер от 0 до 7.")
 
 
 if __name__ == "__main__":

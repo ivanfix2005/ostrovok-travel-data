@@ -206,7 +206,7 @@ class TravelDataClient:
         response["warnings"] += result.warnings
         response["meta"]["source_updated_at"] = result.source_updated_at
         response["meta"]["has_more"] = result.has_more
-        valid, bad, seen = [], 0, set()
+        valid, bad, filtered, seen = [], 0, 0, set()
         for original in result.candidates:
             candidate = deepcopy(original)
             item = candidate.item
@@ -221,6 +221,7 @@ class TravelDataClient:
                     ):
                         raise ValueError()
                     if not hotel_checks(candidate, args, now):
+                        filtered += 1
                         continue
                     if item["match_status"] == "requires_confirmation":
                         response["warnings"].append(
@@ -230,6 +231,7 @@ class TravelDataClient:
                         )
                 elif tool == "get_weather":
                     if not args["start_date"] <= item["date"] < args["end_date"]:
+                        filtered += 1
                         continue
                     for prefix in ("day", "night"):
                         lo, hi = item[f"{prefix}_temp_min_c"], item[f"{prefix}_temp_max_c"]
@@ -241,15 +243,23 @@ class TravelDataClient:
                         or args["direct_only"]
                         and len(item["segments"]) != 1
                     ):
+                        filtered += 1
                         continue
                     previous = None
                     for segment in item["segments"]:
-                        dep, arr = segment["departure_at"], segment["arrival_at"]
-                        if dep and arr:
-                            dep, arr = datetime.fromisoformat(dep), datetime.fromisoformat(arr)
-                            if arr < dep or previous is not None and dep < previous:
-                                raise ValueError()
-                            previous = arr
+                        dep = (
+                            datetime.fromisoformat(segment["departure_at"])
+                            if segment["departure_at"]
+                            else None
+                        )
+                        arr = datetime.fromisoformat(segment["arrival_at"]) if segment["arrival_at"] else None
+                        if dep is not None and previous is not None and dep < previous:
+                            raise ValueError()
+                        if arr is not None and (
+                            (dep is not None and arr < dep) or (previous is not None and arr < previous)
+                        ):
+                            raise ValueError()
+                        previous = arr or dep or previous
                     first = item["segments"][0]["departure_at"]
                     if first and first[:10] != args["departure_date"]:
                         raise ValueError()
@@ -278,7 +288,7 @@ class TravelDataClient:
             response["warnings"].append(
                 warning("INVALID_RECORDS", f"Исключены записи, нарушающие контракт: {bad}")
             )
-            if not valid:
+            if not valid and not filtered:
                 raise DataError("SOURCE_SCHEMA_CHANGED", "Все полученные записи нарушают контракт")
         if tool == "get_weather":
             start, end = datetime.fromisoformat(args["start_date"]), datetime.fromisoformat(args["end_date"])

@@ -137,6 +137,7 @@ def test_2gis_routing_is_road_distance_and_coordinates_are_named(run, request_fo
 
     result = invoke(run, "get_route", request_for("get_route"), handle, Settings(dgis_api_key="route-secret"))
     assert result["status"] == "ok" and result["meta"]["returned_count"] == 1
+    assert result["meta"]["has_more"] is True
     item = result["data"]["items"][0]
     assert item["distance_m"] == 31000 and item["duration_s"] == 2700
     assert item["traffic_mode"] == "unknown"

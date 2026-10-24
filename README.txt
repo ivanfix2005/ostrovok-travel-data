@@ -8,6 +8,13 @@
   START.cmd — меню запуска демо, настроек и тестов.
   OPEN_CODE.cmd — открыть исходники в Visual Studio Code.
 
+Реальные источники:
+  Получите свои ключи у поставщиков по ссылкам из README.md.
+  START.cmd → 5: скрытый ввод ключей в локальный .env.
+  START.cmd → 6: импорт настоящего справочника Яндекс Расписаний.
+  START.cmd → 7: реальные запросы и отчёт reports/live-check.json.
+  В чат и публичный GitHub ключи не отправлять.
+
 Четыре функции: search_hotels, search_transport, get_weather, get_route.
 Все показанные поля обязательны, additionalProperties=false.
 Неизвестное значение null допустимо только там, где разрешено схемой.

@@ -110,10 +110,12 @@ def assert_response(request, response):
             for segment in item["segments"]:
                 departure = segment["departure_at"]
                 arrival = segment["arrival_at"]
-                if departure and arrival:
-                    dep, arr = datetime.fromisoformat(departure), datetime.fromisoformat(arrival)
-                    require(dep <= arr and (previous is None or previous <= dep))
-                    previous = arr
+                dep = datetime.fromisoformat(departure) if departure else None
+                arr = datetime.fromisoformat(arrival) if arrival else None
+                require(dep is None or previous is None or previous <= dep)
+                require(arr is None or dep is None or dep <= arr)
+                require(arr is None or previous is None or previous <= arr)
+                previous = arr or dep or previous
             first = item["segments"][0]["departure_at"]
             require(first is None or first[:10] == args["departure_date"])
             if item["total_price"] is None:

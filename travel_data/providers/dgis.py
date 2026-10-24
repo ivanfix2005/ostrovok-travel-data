@@ -56,6 +56,7 @@ class DgisRoute:
             raise DataError("SOURCE_SCHEMA_CHANGED", "Изменилась структура маршрута 2ГИС") from None
         return ProviderResult(
             [Candidate(item)],
+            has_more=len(payload["result"]) > 1,
             warnings=[
                 warning(
                     "TRAFFIC_UNCONFIRMED", "Тип фактически использованных данных о пробках не подтверждён"

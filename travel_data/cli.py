@@ -8,6 +8,7 @@ from pathlib import Path
 
 import httpx
 
+from .access import SOURCE_ACCESS, configure_keys
 from .client import TravelDataClient, call, make_request
 from .config import Settings
 from .contracts import TOOLS, VERSION
@@ -154,6 +155,8 @@ def main(argv=None):
     parser.add_argument("--env-file", default=".env")
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("doctor", help="Проверить конфигурацию без раскрытия ключей")
+    configure = sub.add_parser("configure", help="Сохранить свои ключи в .env со скрытым вводом")
+    configure.add_argument("--source", choices=("all", *SOURCE_ACCESS), default="all")
     request_parser = sub.add_parser("call", help="Выполнить JSON запрос из файла или stdin")
     request_parser.add_argument("request", help="Путь к JSON или - для stdin")
     request_parser.add_argument("--mode", choices=("live", "fixture"), default="live")
@@ -174,6 +177,9 @@ def main(argv=None):
         settings = Settings.from_env(args.env_file)
         if args.command == "doctor":
             result = doctor(settings)
+        elif args.command == "configure":
+            result = configure_keys(args.env_file, args.source)
+            # A saved key is configuration, not evidence of successful API access.
         elif args.command == "call":
             raw = (
                 sys.stdin.read()

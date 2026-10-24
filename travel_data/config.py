@@ -46,7 +46,7 @@ class Settings:
     def from_env(cls, env_file: str | Path | None = ".env"):
         from dotenv import dotenv_values
 
-        env = {**(dotenv_values(env_file) if env_file else {}), **os.environ}
+        env = {**(dotenv_values(env_file, interpolate=False) if env_file else {}), **os.environ}
         names = (
             "ostrovok_key_id",
             "ostrovok_api_key",

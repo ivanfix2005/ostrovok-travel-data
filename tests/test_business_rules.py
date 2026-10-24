@@ -101,6 +101,18 @@ def test_all_malformed_is_schema_change(run, request_for, now):
     assert result["error"]["code"] == "SOURCE_SCHEMA_CHANGED"
 
 
+def test_filtered_valid_offer_and_malformed_offer_are_partial_empty(run, request_for, now):
+    rows = fixture_candidates("search_hotels")
+    bad = deepcopy(rows[0])
+    del bad.item["hotel_name"]
+    rows[0].item["pets_allowed"] = False
+    request = request_for("search_hotels")
+    result = execute(run, request, rows + [bad], now)
+    assert result["status"] == "partial"
+    assert result["error"] is None and result["data"]["items"] == []
+    assert_response(request, result)
+
+
 def test_weather_missing_dates_are_partial(run, request_for, now):
     result = execute(run, request_for("get_weather"), fixture_candidates("get_weather")[:1], now)
     assert result["status"] == "partial"
@@ -138,6 +150,28 @@ def test_transport_bad_temporal_order_is_rejected(run, request_for, now):
     rows[0].item["segments"][0]["arrival_at"] = "2026-11-10T07:00:00+03:00"
     result = execute(run, request_for("search_transport"), rows, now)
     assert result["error"]["code"] == "SOURCE_SCHEMA_CHANGED"
+
+
+@pytest.mark.parametrize("missing", ["departure_at", "arrival_at"])
+def test_transfer_cannot_go_back_in_time_when_other_time_is_unknown(missing, run, request_for, now):
+    rows = fixture_candidates("search_transport")
+    first = rows[0].item["segments"][0]
+    first["arrival_at"] = "2026-11-10T12:00:00+03:00"
+    second = deepcopy(first)
+    second.update(departure_at="2026-11-10T11:00:00+03:00", arrival_at="2026-11-10T11:30:00+03:00")
+    second[missing] = None
+    rows[0].item["segments"].append(second)
+    request = request_for("search_transport", direct_only=False)
+    result = execute(run, request, rows, now)
+    assert result["error"]["code"] == "SOURCE_SCHEMA_CHANGED"
+
+    # The consumer-facing validator must reject the same impossible transfer.
+    response = execute(run, request, fixture_candidates("search_transport"), now)
+    response["data"]["items"][0]["segments"] = rows[0].item["segments"]
+    from jsonschema import ValidationError
+
+    with pytest.raises(ValidationError):
+        assert_response(request, response)
 
 
 def test_route_must_match_requested_coordinates(run, request_for, now):
