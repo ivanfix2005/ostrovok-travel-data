@@ -10,6 +10,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from travel_data.client import make_request
 from travel_data.demo import ARGUMENTS, FIXED_NOW
 from travel_data.models import ProviderResult
+from travel_data.network import _RECENT_CALLS
+
+
+@pytest.fixture(autouse=True)
+def isolate_provider_quotas():
+    # Unit tests use a simulated provider and must not spend each other's quota.
+    _RECENT_CALLS.clear()
+    yield
+    _RECENT_CALLS.clear()
 
 
 @pytest.fixture

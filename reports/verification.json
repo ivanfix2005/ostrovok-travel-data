@@ -1,11 +1,11 @@
 {
-  "checked_at": "2026-10-24T07:49:03.952976Z",
+  "checked_at": "2026-10-24T08:20:26.093645Z",
   "python": "3.15.1",
   "offline_checks": {
     "ruff": "passed",
     "contract_exports": "passed",
     "pytest": {
-      "tests": 114,
+      "tests": 116,
       "failures": 0,
       "errors": 0,
       "skipped": 0
@@ -21,21 +21,21 @@
     },
     {
       "source_name": "yandex_rasp",
-      "verified": false,
-      "status": "error",
-      "error_code": "ACCESS_NOT_CONFIGURED"
+      "verified": true,
+      "status": "ok",
+      "error_code": null
     },
     {
       "source_name": "yandex_weather",
-      "verified": false,
-      "status": "error",
-      "error_code": "ACCESS_NOT_CONFIGURED"
+      "verified": true,
+      "status": "ok",
+      "error_code": null
     },
     {
       "source_name": "2gis_routing",
-      "verified": false,
-      "status": "error",
-      "error_code": "ACCESS_NOT_CONFIGURED"
+      "verified": true,
+      "status": "ok",
+      "error_code": null
     }
   ],
   "original_schema_archive_received": false,

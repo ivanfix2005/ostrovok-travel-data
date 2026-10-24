@@ -177,7 +177,9 @@ class YandexWeather:
             self.settings.yandex_weather_url,
             deadline=deadline,
             headers={"X-Yandex-Weather-Key": self.settings.yandex_weather_api_key},
-            params={**args["location"], "lang": "ru_RU", "limit": 16, "hours": "false", "extra": "false"},
+            # The live REST endpoint rejects limit > 11 with HTTP 400. The contract
+            # still allows 16 requested days; normalization reports unavailable dates.
+            params={**args["location"], "lang": "ru_RU", "limit": 11, "hours": "false", "extra": "false"},
         )
         if not isinstance(payload.get("forecasts"), list):
             raise DataError("SOURCE_SCHEMA_CHANGED", "В ответе погоды отсутствует forecasts")

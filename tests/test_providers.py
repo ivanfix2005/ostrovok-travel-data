@@ -96,6 +96,9 @@ def test_weather_normalization_and_no_fake_water_temperature(run, request_for):
 
     def handle(request):
         calls.append(request)
+        # The real REST endpoint rejects larger horizons, even with an active key.
+        if not 1 <= int(request.url.params["limit"]) <= 11:
+            return httpx.Response(400, json={"errors": ["limit should be in [1, 11]"]})
         return httpx.Response(200, json=weather_payload())
 
     result = invoke(run, "get_weather", request_for("get_weather"), handle)
@@ -124,6 +127,7 @@ def test_2gis_routing_is_road_distance_and_coordinates_are_named(run, request_fo
         body = json.loads(request.content)
         assert body["points"][0] == {"lat": 43.4499, "lon": 39.9566, "type": "stop"}
         assert body["transport"] == "driving"
+        assert body["alternative"] == 0
         return httpx.Response(
             200,
             json={

@@ -22,6 +22,7 @@ class Settings:
     time_budget_seconds: float = 15
     request_timeout_seconds: float = 6
     max_response_bytes: int = 32000
+    dgis_requests_per_minute: int = 5
 
     def __post_init__(self):
         if not 0 < self.time_budget_seconds <= 15:
@@ -30,6 +31,8 @@ class Settings:
             raise ValueError("request_timeout_seconds must be > 0 and <= 15")
         if self.cache_ttl_seconds < 0 or self.max_response_bytes < 4096:
             raise ValueError("Invalid cache TTL or response size")
+        if type(self.dgis_requests_per_minute) is not int or self.dgis_requests_per_minute <= 0:
+            raise ValueError("dgis_requests_per_minute must be a positive integer")
         for value in (
             self.ostrovok_base_url,
             self.yandex_rasp_base_url,
@@ -63,4 +66,5 @@ class Settings:
         values = {name: env[name.upper()] for name in names if env.get(name.upper())}
         values["cache_allowed"] = str(env.get("CACHE_ALLOWED", "false")).lower() == "true"
         values["cache_ttl_seconds"] = float(env.get("CACHE_TTL_SECONDS") or 0)
+        values["dgis_requests_per_minute"] = int(env.get("DGIS_REQUESTS_PER_MINUTE") or 5)
         return cls(**values)

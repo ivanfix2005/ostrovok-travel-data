@@ -46,19 +46,21 @@ def allow_retry(attempt):
 
 
 @asynccontextmanager
-async def source_slot(host, path):
+async def source_slot(host, path, *, calls_per_minute=None):
     with _LOCK:
         limiter = _LIMITERS.setdefault(host, threading.BoundedSemaphore(2))
     while not limiter.acquire(blocking=False):
         await asyncio.sleep(0.01)
     try:
-        if path.endswith("/hotel/info/"):
+        limit = 30 if path.endswith("/hotel/info/") else calls_per_minute
+        if limit is not None:
             with _LOCK:
                 now = monotonic()
-                calls = [t for t in _RECENT_CALLS.get(host, []) if now - t < 60]
-                if len(calls) >= 30:
-                    raise DataError("SOURCE_RATE_LIMITED", "Локальный лимит запросов контента отелей", True)
-                _RECENT_CALLS[host] = [*calls, now]
+                bucket = (host, path)
+                calls = [t for t in _RECENT_CALLS.get(bucket, []) if now - t < 60]
+                if len(calls) >= limit:
+                    raise DataError("SOURCE_RATE_LIMITED", "Локальный минутный лимит источника", True)
+                _RECENT_CALLS[bucket] = [*calls, now]
         yield
     finally:
         limiter.release()
@@ -75,7 +77,15 @@ class Network:
             if monotonic() >= deadline:
                 raise DataError("SOURCE_TIMEOUT", "Общий лимит времени исчерпан", True)
             try:
-                async with source_slot(parsed.netloc, parsed.path):
+                async with source_slot(
+                    parsed.netloc,
+                    parsed.path,
+                    calls_per_minute=(
+                        self.settings.dgis_requests_per_minute
+                        if url == self.settings.dgis_routing_url
+                        else None
+                    ),
+                ):
                     remaining = deadline - monotonic()
                     if remaining <= 0:
                         raise DataError("SOURCE_TIMEOUT", "Общий лимит времени исчерпан", True)

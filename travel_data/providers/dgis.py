@@ -28,6 +28,8 @@ class DgisRoute:
                 "transport": "driving",
                 "route_mode": "fastest",
                 "traffic_mode": "jam",
+                # One route is enough for the contract and spends one demo quota object.
+                "alternative": 0,
                 "locale": "ru",
             },
         )

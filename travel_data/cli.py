@@ -43,7 +43,11 @@ def doctor(settings):
                 "live_verified": False,
             },
             "yandex_weather": {"configured": bool(settings.yandex_weather_api_key), "live_verified": False},
-            "2gis_routing": {"configured": bool(settings.dgis_api_key), "live_verified": False},
+            "2gis_routing": {
+                "configured": bool(settings.dgis_api_key),
+                "requests_per_minute": settings.dgis_requests_per_minute,
+                "live_verified": False,
+            },
         },
         "note": "doctor проверяет конфигурацию; реальную проверку выполняет live-check",
     }
