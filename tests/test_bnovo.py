@@ -152,6 +152,28 @@ def test_captcha_or_changed_page_is_not_empty(run, hotel_request, bnovo_settings
     assert result["error"]["code"] == "SOURCE_SCHEMA_CHANGED"
 
 
+@pytest.mark.parametrize(
+    "attribute", ['class="room d-none"', "hidden", 'aria-hidden="true"', 'style="display: none"']
+)
+def test_hidden_room_is_not_an_available_offer(attribute, run, hotel_request, bnovo_settings):
+    html = page().replace(
+        '<div class="tariff plan_row"', f'<section {attribute}><div class="tariff plan_row"'
+    )
+    html = html.replace("</html>", "</section></html>")
+    result = invoke(run, hotel_request, bnovo_settings, lambda _: httpx.Response(200, text=html))
+    assert result["status"] == "empty"
+
+
+def test_hidden_cheaper_row_cannot_replace_visible_quote(run, hotel_request, bnovo_settings):
+    html = page()
+    row = html[html.index("<tr data-plan-id") : html.index("</tr>") + 5]
+    hidden = row.replace("<tr data-plan-id", '<tr class="d-none" data-plan-id').replace("35000", "1000")
+    html = html.replace("</tbody>", hidden + "</tbody>")
+    result = invoke(run, hotel_request, bnovo_settings, lambda _: httpx.Response(200, text=html))
+    assert result["status"] == "ok" and result["meta"]["returned_count"] == 1
+    assert result["data"]["items"][0]["total_price"]["amount_minor"] == 3_500_000
+
+
 def test_nightly_price_is_never_multiplied_into_total(run, hotel_request, bnovo_settings):
     result = invoke(
         run,

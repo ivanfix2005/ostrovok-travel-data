@@ -241,6 +241,16 @@ class BnovoHotels:
 
     @staticmethod
     def offer(row, rooms, args, hotel_name, source_url, nights, uid, page_city):
+        # HTML also contains hidden alternatives unavailable to the selected party.
+        # A matching price/guest row inside such a room is not a guest-facing offer.
+        for element in (row, *row.parents):
+            if (
+                "d-none" in element.get("class", [])
+                or element.has_attr("hidden")
+                or element.get("aria-hidden") == "true"
+                or re.search(r"display\s*:\s*none\b", element.get("style", ""), re.I)
+            ):
+                return None
         guest_list = row.select_one(".guest-list")
         selected = row.select_one("select[data-room-id][data-real-room-id]")
         plan = row.find_parent("div", class_="plan_row")
