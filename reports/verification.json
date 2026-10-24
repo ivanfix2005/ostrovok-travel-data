@@ -1,23 +1,23 @@
 {
-  "checked_at": "2026-10-24T08:20:26.093645Z",
+  "checked_at": "2026-10-24T09:28:27.384023Z",
   "python": "3.15.1",
   "offline_checks": {
     "ruff": "passed",
     "contract_exports": "passed",
     "pytest": {
-      "tests": 116,
+      "tests": 138,
       "failures": 0,
       "errors": 0,
       "skipped": 0
     }
   },
-  "live_integrations_verified": false,
+  "live_integrations_verified": true,
   "source_results": [
     {
-      "source_name": "ostrovok_b2b",
-      "verified": false,
-      "status": "error",
-      "error_code": "ACCESS_NOT_CONFIGURED"
+      "source_name": "bnovo_public",
+      "verified": true,
+      "status": "ok",
+      "error_code": null
     },
     {
       "source_name": "yandex_rasp",

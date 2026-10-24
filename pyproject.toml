@@ -8,7 +8,7 @@ version = "1.0.0"
 description = "Russian travel data adapters for the O!din zapros hackathon"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = ["httpx>=0.28,<0.29", "jsonschema[format]>=4.23,<5", "python-dotenv>=1.0,<2"]
+dependencies = ["httpx>=0.28,<0.29", "jsonschema[format]>=4.23,<5", "python-dotenv>=1.0,<2", "beautifulsoup4>=4.13,<5"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8,<10", "ruff>=0.11,<1", "build>=1,<2", "setuptools>=77"]

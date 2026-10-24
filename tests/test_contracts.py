@@ -26,7 +26,7 @@ def test_fixtures_are_valid_and_explicit(tool, request_for):
 @pytest.mark.parametrize("tool", TOOLS)
 def test_missing_credentials_are_not_fake_success(tool, request_for, run):
     async def check():
-        async with TravelDataClient(Settings(), clock=lambda: FIXED_NOW) as client:
+        async with TravelDataClient(Settings(hotel_provider="ostrovok"), clock=lambda: FIXED_NOW) as client:
             result = await client.execute(request_for(tool))
         assert result["status"] == "error"
         assert result["error"]["code"] == "ACCESS_NOT_CONFIGURED"

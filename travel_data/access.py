@@ -7,11 +7,12 @@ from pathlib import Path
 
 from dotenv import dotenv_values, set_key
 
+from .config import Settings
 from .errors import DataError
 
 SOURCE_ACCESS = {
     "ostrovok": {
-        "name": "Островок B2B",
+        "name": "Островок B2B (необязательный адаптер)",
         "variables": ("OSTROVOK_KEY_ID", "OSTROVOK_API_KEY"),
         "portal": "https://b2b.ostrovok.ru/",
         "instructions": "https://help.b2b.ostrovok.ru/ru/articles/9330513",
@@ -51,7 +52,13 @@ def configure_keys(env_file, source="all", *, secret_input=None, output=print):
         secret_input = getpass.getpass
     path = Path(env_file)
     existing = dotenv_values(path, interpolate=False) if path.is_file() else {}
-    selected = SOURCE_ACCESS.values() if source == "all" else [SOURCE_ACCESS[source]]
+    if source == "all":
+        use_ostrovok = Settings.from_env(path).selected_hotel_provider == "ostrovok"
+        selected = [item for key, item in SOURCE_ACCESS.items() if key != "ostrovok" or use_ostrovok]
+        if not use_ostrovok:
+            output("Для отелей выбран Bnovo: партнёрские ключи не требуются.")
+    else:
+        selected = [SOURCE_ACCESS[source]]
     updates = {}
     try:
         with warnings.catch_warnings():

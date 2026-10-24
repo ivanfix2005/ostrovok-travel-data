@@ -15,6 +15,7 @@ from .demo import FIXED_NOW, FixtureProvider
 from .errors import DataError
 from .models import warning
 from .network import RETRY_BUDGET, Network
+from .providers.bnovo import BnovoHotels
 from .providers.dgis import DgisRoute
 from .providers.ostrovok import OstrovokHotels
 from .providers.yandex import YandexTransport, YandexWeather
@@ -92,7 +93,11 @@ class TravelDataClient:
             {tool: FixtureProvider(tool) for tool in TOOLS}
             if mode == "fixture"
             else {
-                "search_hotels": OstrovokHotels(self.settings, network),
+                "search_hotels": (
+                    BnovoHotels(self.settings, network)
+                    if self.settings.selected_hotel_provider == "bnovo_public"
+                    else OstrovokHotels(self.settings, network)
+                ),
                 "search_transport": YandexTransport(self.settings, network),
                 "get_weather": YandexWeather(self.settings, network),
                 "get_route": DgisRoute(self.settings, network),

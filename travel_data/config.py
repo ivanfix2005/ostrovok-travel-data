@@ -11,6 +11,9 @@ class Settings:
     yandex_rasp_api_key: str = field(default="", repr=False)
     yandex_weather_api_key: str = field(default="", repr=False)
     dgis_api_key: str = field(default="", repr=False)
+    hotel_provider: str = "auto"
+    bnovo_base_url: str = "https://reservationsteps.ru/rooms/index/"
+    bnovo_hotels_file: str = ""
     ostrovok_base_url: str = "https://api.ostrovok.ru/api/b2b/v3/"
     yandex_rasp_base_url: str = "https://api.rasp.yandex-net.ru/v3.0/"
     yandex_weather_url: str = "https://api.weather.yandex.ru/v2/forecast"
@@ -25,6 +28,8 @@ class Settings:
     dgis_requests_per_minute: int = 5
 
     def __post_init__(self):
+        if self.hotel_provider not in ("auto", "bnovo_public", "ostrovok"):
+            raise ValueError("Unknown hotel provider")
         if not 0 < self.time_budget_seconds <= 15:
             raise ValueError("time_budget_seconds must be > 0 and <= 15")
         if not 0 < self.request_timeout_seconds <= 15:
@@ -38,12 +43,19 @@ class Settings:
             self.yandex_rasp_base_url,
             self.yandex_weather_url,
             self.dgis_routing_url,
+            self.bnovo_base_url,
         ):
             parsed = urlsplit(value)
             if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
                 raise ValueError("Provider URL must be HTTPS without credentials")
             if parsed.query or parsed.fragment:
                 raise ValueError("Provider URL must not include query parameters or fragments")
+
+    @property
+    def selected_hotel_provider(self):
+        if self.hotel_provider != "auto":
+            return self.hotel_provider
+        return "ostrovok" if self.ostrovok_key_id or self.ostrovok_api_key else "bnovo_public"
 
     @classmethod
     def from_env(cls, env_file: str | Path | None = ".env"):
@@ -56,6 +68,9 @@ class Settings:
             "yandex_rasp_api_key",
             "yandex_weather_api_key",
             "dgis_api_key",
+            "hotel_provider",
+            "bnovo_base_url",
+            "bnovo_hotels_file",
             "ostrovok_base_url",
             "yandex_rasp_base_url",
             "yandex_weather_url",

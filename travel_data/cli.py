@@ -14,6 +14,7 @@ from .config import Settings
 from .contracts import TOOLS, VERSION
 from .demo import ARGUMENTS
 from .errors import DataError
+from .providers.bnovo import hotel_catalog
 from .utils import utc_iso
 
 
@@ -32,7 +33,16 @@ def doctor(settings):
         "schema_version": VERSION,
         "python": sys.version.split()[0],
         "contracts": "reconstructed_from_docx_pending_original_archive",
+        "selected_hotel_provider": settings.selected_hotel_provider,
         "sources": {
+            "bnovo_public": {
+                "configured": settings.selected_hotel_provider == "bnovo_public",
+                "requires_api_key": False,
+                "catalogue_count": len(hotel_catalog(settings))
+                if settings.selected_hotel_provider == "bnovo_public"
+                else 0,
+                "live_verified": False,
+            },
             "ostrovok_b2b": {
                 "configured": bool(settings.ostrovok_key_id and settings.ostrovok_api_key),
                 "live_verified": False,
@@ -126,6 +136,11 @@ async def live_check(settings, output):
     check_in = today + timedelta(days=14)
     requests["search_hotels"]["check_in"] = check_in.isoformat()
     requests["search_hotels"]["check_out"] = (check_in + timedelta(days=7)).isoformat()
+    # Connectivity probe: request a real quote without optional restrictive filters.
+    # The complete request is retained in the report; user calls keep all their filters.
+    requests["search_hotels"].update(
+        meal=None, pets_required=False, free_cancellation_required=False, max_total_price_minor=None
+    )
     requests["search_transport"]["departure_date"] = check_in.isoformat()
     requests["get_weather"]["start_date"] = today.isoformat()
     requests["get_weather"]["end_date"] = (today + timedelta(days=2)).isoformat()

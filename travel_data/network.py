@@ -72,6 +72,23 @@ class Network:
         self.http = http
 
     async def json(self, method, url, *, deadline, **kwargs):
+        payload = await self.read(method, url, deadline=deadline, **kwargs)
+        try:
+            result = json.loads(payload, parse_constant=lambda _: (_ for _ in ()).throw(ValueError()))
+        except (ValueError, UnicodeError):
+            raise DataError("SOURCE_SCHEMA_CHANGED", "Источник вернул некорректный JSON") from None
+        if not isinstance(result, dict):
+            raise DataError("SOURCE_SCHEMA_CHANGED", "Изменилась структура ответа источника")
+        return result
+
+    async def text(self, method, url, *, deadline, **kwargs):
+        payload = await self.read(method, url, deadline=deadline, **kwargs)
+        try:
+            return payload.decode("utf-8-sig")
+        except UnicodeError:
+            raise DataError("SOURCE_SCHEMA_CHANGED", "Источник вернул некорректный UTF-8") from None
+
+    async def read(self, method, url, *, deadline, **kwargs):
         parsed = urlsplit(url)
         for attempt in range(2):
             if monotonic() >= deadline:
@@ -112,17 +129,7 @@ class Network:
                             payload.extend(chunk)
                             if len(payload) > 8_000_000:
                                 raise DataError("SOURCE_SCHEMA_CHANGED", "Ответ источника слишком велик")
-                        try:
-                            result = json.loads(
-                                payload, parse_constant=lambda _: (_ for _ in ()).throw(ValueError())
-                            )
-                        except (ValueError, UnicodeError):
-                            raise DataError(
-                                "SOURCE_SCHEMA_CHANGED", "Источник вернул некорректный JSON"
-                            ) from None
-                        if not isinstance(result, dict):
-                            raise DataError("SOURCE_SCHEMA_CHANGED", "Изменилась структура ответа источника")
-                        return result
+                        return bytes(payload)
             except (httpx.TimeoutException, httpx.NetworkError, httpx.RemoteProtocolError) as error:
                 if allow_retry(attempt):
                     await asyncio.sleep(0.15)

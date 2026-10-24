@@ -74,3 +74,17 @@ def test_cli_passes_selected_source_and_env_path(monkeypatch, tmp_path, capsys):
     assert main(["--env-file", str(path), "configure", "--source", "rasp"]) == 0
     assert received == [(str(path), "rasp")]
     assert json.loads(capsys.readouterr().out)["live_verified"] is False
+
+
+def test_all_key_setup_does_not_request_optional_ostrovok_keys_for_bnovo(tmp_path):
+    env = tmp_path / ".env"
+    env.write_text("HOTEL_PROVIDER=bnovo_public\n", encoding="utf-8")
+    prompts = []
+
+    def secret_input(prompt):
+        prompts.append(prompt)
+        return "test-secret"
+
+    result = configure_keys(env, secret_input=secret_input, output=lambda _: None)
+    assert result["updated_variables"] == ["YANDEX_RASP_API_KEY", "YANDEX_WEATHER_API_KEY", "DGIS_API_KEY"]
+    assert len(prompts) == 3 and all("OSTROVOK" not in prompt for prompt in prompts)
